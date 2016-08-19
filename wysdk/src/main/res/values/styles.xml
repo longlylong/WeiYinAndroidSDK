@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="WY_NoActionbar" parent="Theme.AppCompat.Light.NoActionBar" />
+
+    <style name="WY_PopupAnimation" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/wy_popup_enter</item>
+        <item name="android:windowExitAnimation">@anim/wy_popup_exit</item>
+    </style>
+
+    <style name="WY_Activity_Dialog_Translate" parent="WY_NoActionbar">
+        <item name="android:windowAnimationStyle">@style/WY_PopupAnimation</item>
+        <item name="android:windowFrame">@null</item>
+        <!-- 边框 -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!-- 半透明 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 背景透明 -->
+        <item name="android:backgroundDimEnabled">true</item>
+        <!-- 模糊 -->
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+</resources>

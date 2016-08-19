@@ -1,0 +1,49 @@
+apply plugin: 'com.android.application'
+
+def buildTime() {
+    def time = new Date()
+    return time.format("MM_dd_HH_mm")
+}
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
+
+    defaultConfig {
+        applicationId "com.example.king.weiyinsdk"
+        minSdkVersion 15
+        targetSdkVersion 23
+        versionCode 20160808
+        versionName "1.3.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    if (output.outputFile != null && output.outputFile.name.endsWith('.apk')
+                            && 'release'.equals(variant.buildType.name)) {
+                        def apkFile = new File(
+                                output.outputFile.getParent(),
+                                "weiyin_sdk_${variant.flavorName}_v${variant.versionName}_${buildTime()}.apk")
+                        output.outputFile = apkFile
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':wysdk')
+    compile 'com.android.support:appcompat-v7:23.2.1'
+    compile 'com.android.support:cardview-v7:23.2.1'
+    compile 'com.android.support:design:23.2.1'
+
+    compile files('libs/universal-image-loader-1.9.5.jar')
+
+}

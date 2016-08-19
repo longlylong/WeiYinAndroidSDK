@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="120dp"
+    android:layout_height="120dp">
+
+    <ImageView
+        android:id="@+id/item_select_data_img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/item_select_data_only_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/wy_bg_text_color"
+        android:maxLines="10"
+        android:padding="8dp" />
+
+    <ImageView
+        android:id="@+id/item_select_data_image_text"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:src="@mipmap/wy_photo_has_text" />
+
+    <ImageView
+        android:id="@+id/item_select_data_waring"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:src="@mipmap/wy_select_data_waring"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/item_select_data_selected_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/wy_bg_selected_image_color"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/wy_check_white_big" />
+    </RelativeLayout>
+</RelativeLayout>
