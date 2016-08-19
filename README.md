@@ -16,33 +16,35 @@ Android SDK开发包 版本号 1.3.0 日期 20160808
 
 混淆配置
 
--keepattributes Signature
--keep class * extends java.lang.annotation.Annotation { *; }
--keepattributes *Annotation*
+    -keepattributes Signature
+    -keep class * extends java.lang.annotation.Annotation { *; }
+    -keepattributes *Annotation*
 
--keepattributes *JavascriptInterface*
+    -keepattributes *JavascriptInterface*
 
--keepclassmembers class
--dontwarn com.baidu.**
-com.weiyin.wysdk.activity.WYWebViewActivity$AndroidClient {
- public *;
-}
+    -keepclassmembers class
+    -dontwarn com.baidu.**
+    com.weiyin.wysdk.activity.WYWebViewActivity$AndroidClient {
+     public *;
+    }
 
--keep class com.weiyin.wysdk.model.** {*;}
--dontwarn com.weiyin.wysdk.model.**
--keepclassmembers class com.weiyin.wysdk.model {
-  <fields>;
-  <methods>;
-}
+    -keep class com.weiyin.wysdk.model.** {*;}
+    -dontwarn com.weiyin.wysdk.model.**
+    -keepclassmembers class com.weiyin.wysdk.model {
+      <fields>;
+      <methods>;
+    }
+
+
 AndroidManifest.xml 配置
 
-<!-- 通用权限 -->
-<uses-permission android:name="android.permission.INTERNET" />
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<!--支付sdk-->
+    <!-- 通用权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!--支付sdk-->
     <activity
         android:name="com.pingplusplus.android.PaymentActivity"
         android:launchMode="singleTop"
@@ -63,14 +65,18 @@ AndroidManifest.xml 配置
         android:exported="true"
         android:targetActivity="com.pingplusplus.android.PaymentActivity" />
     <!--支付sdk-->
+
+
 初始化
 
     //openid 每个合作方的每个用户唯一标识 建议写法 前缀+唯一标识 如 WY_xxxxxxx
     WYSdk.getInstance().setSDK(this, "52HJR62BDS6SDD21", "VlYmY2ZjBmOWFmZTJlZTk3NzdhN2M0ODM0MjE3", "openid");
+
+
 编辑页
 
-//数据编辑面页 默认是打开的 关闭直接就跳去排版页
-private void edit() {
+    //数据编辑面页 默认是打开的 关闭直接就跳去排版页
+    private void edit() {
     //长按可以编辑文本
     WYSdk.getInstance().isShowSelectDataActivity(true);
 
@@ -106,12 +112,14 @@ private void edit() {
             }, 2000);
         }
     });
-}
+    }
+
+
 合作方支付
 
-//设置是否合作方的app支付,默认是false
-//如果是用微印支付或合作方的pingxx支付不需要设置这些
-private void myAppPay() {
+    //设置是否合作方的app支付,默认是false
+    //如果是用微印支付或合作方的pingxx支付不需要设置这些
+    private void myAppPay() {
     WYSdk.getInstance().setMyAppPay(true);
     WYSdk.getInstance().setWyPayOrderListener(new WYPayOrderListener() {
         @Override
@@ -121,32 +129,44 @@ private void myAppPay() {
             //支付成功后,合作方服务器调微印的服务器更新支付结果,文档在联调时索取
         }
     });
-}
+    }
 
- //刷新支结果,用来ui显示的 {@link WYSdk.PAY_SUCCESS,WYSdk.PAY_FAIL,WYSdk.PAY_CANCEL,WYSdk.PAY_INVALID}
-WYSdk.getInstance().refreshPayState(String result)
+    //刷新支结果,用来ui显示的 {@link WYSdk.PAY_SUCCESS,WYSdk.PAY_FAIL,WYSdk.PAY_CANCEL,WYSdk.PAY_INVALID}
+    WYSdk.getInstance().refreshPayState(String result)
+
+
 购物车
 
     //这个是打开购物车,需要的时候可以调用
     WYSdk.getInstance().showShopCart(this);
+
+
 订单页
 
     //这个是打开订单页,需要的时候可以调用
     WYSdk.getInstance().showOrderList(this);
     //刷新订单页状态,如果用合作方支付是需要刷新支付状态的
     WYSdk.getInstance().refreshOrderState();
+
+
 了解纸质画册
 
     //这个是打开纸质画册,需要的时候可以调用
     WYSdk.getInstance().showPaper(this);
+
+
 排版页
 
-//设置好上述相关数据后调用 postPrintData() 即可预览排版页
-WYSdk.getInstance().postPrintData(this, new WYListener<Object>())
+    //设置好上述相关数据后调用 postPrintData() 即可预览排版页
+    WYSdk.getInstance().postPrintData(this, new WYListener<Object>())
+
+
 其他设置
 
-// 设置主题颜色 16进制的颜色 如: f56971
-WYSdk.getInstance().setThemeColor("f56971")
+    // 设置主题颜色 16进制的颜色 如: f56971
+    WYSdk.getInstance().setThemeColor("f56971")
+
+
 SDK使用注意事项
 
 照片页和文本页是可以从属在章节页下的，add时候的顺序要注意
@@ -157,14 +177,16 @@ SDK使用注意事项
 
 这些add都是有先后顺序区分的，排版页看到的顺序是add先到后
 
+
+
 例子
 
-public class MainActivity extends AppCompatActivity {
+    public class MainActivity extends AppCompatActivity {
 
-private ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
 
-@Override
-protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     initView();
@@ -180,11 +202,11 @@ protected void onCreate(Bundle savedInstanceState) {
     //WYSdk.getInstance().showOrderList(this);
     //刷新订单页状态,如果用合作方支付是需要刷新支付状态的
     //WYSdk.getInstance().refreshOrderState();
-}
+    }
 
-//设置是否合作方的app支付,默认是false
-//如果是用微印支付或合作方的pingxx支付不需要设置这些
-private void myAppPay() {
+    //设置是否合作方的app支付,默认是false
+    //如果是用微印支付或合作方的pingxx支付不需要设置这些
+    private void myAppPay() {
     WYSdk.getInstance().setMyAppPay(true);
     WYSdk.getInstance().setWyPayOrderListener(new WYPayOrderListener() {
         @Override
@@ -194,10 +216,10 @@ private void myAppPay() {
             //支付成功后,合作方服务器调微印的服务器更新支付结果,文档在联调时索取
         }
     });
-}
+    }
 
-//数据编辑面页 默认是打开的 关闭直接就跳去排版页
-private void edit() {
+    //数据编辑面页 默认是打开的 关闭直接就跳去排版页
+    private void edit() {
     //长按可以编辑文本
     WYSdk.getInstance().isShowSelectDataActivity(true);
 
@@ -234,9 +256,9 @@ private void edit() {
             }, 2000);
         }
     });
-}
+    }
 
-private void initView() {
+    private void initView() {
     progressDialog = new ProgressDialog(this);
     TextView textview = (TextView) findViewById(R.id.text);
     textview.setOnClickListener(new View.OnClickListener() {
@@ -247,9 +269,9 @@ private void initView() {
             postData();
         }
     });
-}
+    }
 
-private void addData() {
+    private void addData() {
     //图片素材 必须是网络路径 宽高也是必要的
     String frontCoverUrl = "http://img1.3lian.com/2015/w7/98/d/22.jpg";//1210 x 681
     String flyleafHeadUrl = "http://img21.mtime.cn/mg/2011/05/18/161045.63077415.jpg";//251 x 251
@@ -284,10 +306,10 @@ private void addData() {
     WYSdk.getInstance().addPhotoBlock("", photoUrl5, photoUrl5, originalTime, 1208, 806);
     WYSdk.getInstance().addPhotoBlock("这个是照片6的描述哦,我也跟在章节后面呢", photoUrl6, photoUrl6, originalTime, 626, 468);
     WYSdk.getInstance().addTextBlock("我是跟章节2后面的文本");
-}
+    }
 
-private void postData() {
-    WYSdk.getInstance().postPrintData(this, new WYListener<Object>() {
+    private void postData() {
+      WYSdk.getInstance().postPrintData(this, new WYListener<Object>() {
 
         @Override
         public void onStart() {
@@ -307,5 +329,5 @@ private void postData() {
             Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
         }
     });
-}
-}
+    }
+    }
