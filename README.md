@@ -1,10 +1,10 @@
-Android SDK开发包 版本号 1.3.0 日期 20160808
+Android SDK开发包 版本号 1.4.0 日期 20160920
 
 安装
 
 当您下载了WeiYin Android SDK 的 zip 包后，进行以下步骤（对Android studio适用）:
 
-注意本SDK引用了 RETROFIT2.0.2如果遇到JAR冲突请自行去掉
+注意本SDK引用了 RETROFIT2.1.0如果遇到JAR冲突请自行去掉
 
 1.把wysdk放到工程根目录
 
@@ -158,7 +158,8 @@ AndroidManifest.xml 配置
 排版页
 
     //设置好上述相关数据后调用 postPrintData() 即可预览排版页
-    WYSdk.getInstance().postPrintData(this, new WYListener<Object>())
+    //bookType=> WYSdk.Print_Book,WYSdk.Print_Card,WYSdk.Print_Photo,WYSdk.Print_Calendar
+    WYSdk.getInstance().postPrintData(this,bookType, new WYListener<Object>())
 
 
 其他设置
