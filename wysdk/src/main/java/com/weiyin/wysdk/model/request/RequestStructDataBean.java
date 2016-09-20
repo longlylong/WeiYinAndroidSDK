@@ -1,6 +1,7 @@
 package com.weiyin.wysdk.model.request;
 
 import com.google.gson.annotations.Expose;
+import com.weiyin.wysdk.WYSdk;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -17,6 +18,12 @@ public class RequestStructDataBean {
 
     @Expose
     public String identity;
+
+    /**
+     * {@link WYSdk.Print_Book,WYSdk.Print_Card,WYSdk.Print_Photo,WYSdk.Print_Calendar}
+     */
+    @Expose
+    public int bookType;
 
     /**
      * 第一次提交不用 分批以后第二次提交要传这个

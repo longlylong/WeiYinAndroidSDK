@@ -140,7 +140,7 @@ public class WYWebViewActivity extends BaseWeiYinActivity {
                     mWebView.setVisibility(View.INVISIBLE);
                 }
 
-                if (url.contains("/book/")) {
+                if (url.contains("/book/") || url.contains("/photo/") || url.contains("/calendar/")||url.contains("/card/")) {
                     orientation(0);
                 } else {
                     orientation(1);

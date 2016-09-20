@@ -29,10 +29,17 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class WYSdk extends BaseSdk {
 
+    //支付状态
     public static final String PAY_SUCCESS = "success";//  payment succeed
     public static final String PAY_FAIL = "fail";// payment failed
     public static final String PAY_CANCEL = "cancel";// user canceld
     public static final String PAY_INVALID = "invalid";// payment plugin not installed
+
+    //成品类型
+    public static final int Print_Book = 0;// 成书
+    public static final int Print_Card = 1;// 成卡片
+    public static final int Print_Photo = 3;// 照片冲印
+    public static final int Print_Calendar = 4;// 台历
 
     private HttpStore mHttpStore;
     private RequestStructDataBean structDataBean;
@@ -399,8 +406,9 @@ public class WYSdk extends BaseSdk {
 
     /**
      * 提交数据入口
+     * {@link WYSdk.Print_Book,WYSdk.Print_Card,WYSdk.Print_Photo,WYSdk.Print_Calendar}
      */
-    public void postPrintData(final Context context, final WYListener<Object> listener) {
+    public void postPrintData(final Context context, final int bookType, final WYListener<Object> listener) {
         if (structDataBean.structData.cover == null || structDataBean.structData.flyleaf == null || structDataBean.structData.preface == null
                 || structDataBean.structData.copyright == null || structDataBean.structData.backCover == null) {
             throw new IllegalArgumentException("data not integrity!!");
@@ -410,17 +418,17 @@ public class WYSdk extends BaseSdk {
 
         if (isLogin()) {
             if (isShowSelectDataPage) {
-                SelectDataActivity.launch(context);
+                SelectDataActivity.launch(context, bookType);
                 callSuccess(controller, -1);
             } else {
-                requestPrint(context, true, listener);
+                requestPrint(context, bookType, true, listener);
             }
 
         } else {
             final Controller c = new Controller(new WYListener<UserInfoBean>() {
                 @Override
                 public void onSuccess(UserInfoBean result) {
-                    postPrintData(context, listener);
+                    postPrintData(context, bookType, listener);
                 }
 
                 @Override
@@ -432,12 +440,14 @@ public class WYSdk extends BaseSdk {
         }
     }
 
-    public void requestPrint(final Context context, final boolean failedClear, WYListener<Object> listener) {
+    public void requestPrint(final Context context, final int bookType, final boolean failedClear, WYListener<Object> listener) {
         final Controller controller = new Controller(listener);
         runOnAsyncThread(new Runnable() {
             @Override
             public void run() {
                 structDataBean.identity = getIdentity();
+                structDataBean.bookType = bookType;
+
                 final PrintBean printBean = mHttpStore.postStructData(structDataBean);
 
                 handleResult(printBean, controller, new HandleResultListener() {

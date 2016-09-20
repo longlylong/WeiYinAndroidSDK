@@ -23,7 +23,7 @@ public class HttpConstant {
     /**
      * 线上服务器
      */
-    public static boolean ONLINE_SERVER = true;
+    private static boolean ONLINE_SERVER = true;
 
     public static String Root_Api_Url = ONLINE_SERVER ? Online_Api_Url : Test_Api_Url;
 

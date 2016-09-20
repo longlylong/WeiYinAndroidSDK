@@ -41,20 +41,24 @@ public class SelectDataActivity extends BaseWeiYinActivity {
     private int mLastLongPressPos;
     private GestureDetector gestureDetector;
     private boolean isLoadingMore;
+    private int mBookType = WYSdk.Print_Book;
 
     private LoadMoreFootView mLoadMoreFootView;
 
     private static final int REQUEST_EDIT = 1111;
     private static final int REQUEST_SELECT_OPT = 2222;
 
-    public static void launch(Context context) {
+    private static final String BookType = "BookType";
+
+    public static void launch(Context context, int bookType) {
         Intent intent = getIntent(context, SelectDataActivity.class);
+        intent.putExtra(BookType, bookType);
         context.startActivity(intent);
     }
 
     @Override
     public void initIntentData() {
-
+        mBookType = getIntent().getIntExtra(BookType, WYSdk.Print_Book);
     }
 
     @Override
@@ -204,7 +208,7 @@ public class SelectDataActivity extends BaseWeiYinActivity {
 
                         }
                         structDataBean.structData.dataBlocks = selectedArr;
-                        WYSdk.getInstance().requestPrint(SelectDataActivity.this, false, new WYListener<Object>() {
+                        WYSdk.getInstance().requestPrint(SelectDataActivity.this, mBookType, false, new WYListener<Object>() {
                             @Override
                             public void onFail(String msg) {
                                 mProgressDialog.dismiss();

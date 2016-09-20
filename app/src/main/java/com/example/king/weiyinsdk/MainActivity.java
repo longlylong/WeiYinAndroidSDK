@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -122,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //每次请求前都要添加好数据,请求成功或失败都会清除数据
                 addData();
-                postData();
+                postData(WYSdk.Print_Book);
                 fabLib.closeOrOpen();
 
             }
@@ -131,6 +130,8 @@ public class MainActivity extends AppCompatActivity {
         fabLib.addItem(R.mipmap.icon_detail_printfing, "照片冲印", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                addData();
+                postData(WYSdk.Print_Photo);
                 fabLib.closeOrOpen();
             }
         });
@@ -138,6 +139,8 @@ public class MainActivity extends AppCompatActivity {
         fabLib.addItem(R.mipmap.icon_detail_printfing, "卡片", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                addData();
+                postData(WYSdk.Print_Card);
                 fabLib.closeOrOpen();
             }
         });
@@ -145,6 +148,8 @@ public class MainActivity extends AppCompatActivity {
         fabLib.addItem(R.mipmap.icon_detail_printfing, "台历", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                addData();
+                postData(WYSdk.Print_Calendar);
                 fabLib.closeOrOpen();
             }
         });
@@ -305,15 +310,10 @@ public class MainActivity extends AppCompatActivity {
         WYSdk.getInstance().addPhotoBlock("", photoUrl39, photoUrl39, originalTime, 1289, 806);
         WYSdk.getInstance().addPhotoBlock("", photoUrl40, photoUrl40, originalTime, 1289, 806);
 
-        WYSdk.getInstance().addChapterBlock("纸质印刷和电子屏幕显示差异", "印刷与电子屏幕显示接近但无法一致。电子照片显示明亮清晰，色彩也更丰富饱满；\n" +
-                "纸质书照片整体亮度会降低，整体偏暗偏淡。\n" +
-                "因为两者显示原理不一样，成像原理不一样，显示效果会接近，但不可能一致。\n\n" +
-                "建议您挑选照片时，尽可能选择明亮清晰、色彩饱满的照片；避免选择曝光过度，偏亮或偏暗");
-
     }
 
-    private void postData() {
-        WYSdk.getInstance().postPrintData(this, new WYListener<Object>() {
+    private void postData(int bookType) {
+        WYSdk.getInstance().postPrintData(this, bookType, new WYListener<Object>() {
 
             @Override
             public void onStart() {
