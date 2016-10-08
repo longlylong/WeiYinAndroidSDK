@@ -47,4 +47,11 @@ public class HttpConstant {
     public static String getPaperUrl() {
         return ONLINE_SERVER ? WYSdk.getInstance().getHost() + "/home/bookshow" : "http://apptest.weiyin.cc/home/bookshow";
     }
+
+    /**
+     * 纸质画册地址
+     */
+    public static String getQuestionUrl() {
+        return "http://app.weiyin.cc/home/linktowx";
+    }
 }

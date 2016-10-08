@@ -39,6 +39,9 @@ public class ShopCartListBean extends BaseResultBean implements Serializable {
 
         @Expose
         public int bookMakeType;//制作工艺
+        
+        @Expose
+        public int bookType;//
 
         @Override
         public int compare(Cart lhs, Cart rhs) {

@@ -3,6 +3,7 @@ package com.weiyin.wysdk.activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.GestureDetector;
@@ -18,6 +19,8 @@ import com.weiyin.wysdk.activity.base.BaseWeiYinActivity;
 import com.weiyin.wysdk.baseadapter.BaseQuickAdapter;
 import com.weiyin.wysdk.basesdk.WYListener;
 import com.weiyin.wysdk.model.request.RequestStructDataBean;
+import com.weiyin.wysdk.util.SpUtils;
+import com.weiyin.wysdk.util.StatusBarUtil;
 import com.weiyin.wysdk.util.thread.AsyncExecutor;
 import com.weiyin.wysdk.view.ActionBarView;
 import com.weiyin.wysdk.view.LoadMoreFootView;
@@ -38,6 +41,10 @@ public class SelectDataActivity extends BaseWeiYinActivity {
     private ProgressDialog mProgressDialog;
     private SelectDataSection mLastLongPressSection;
     private StaggeredGridLayoutManager mLayoutManager;
+
+    private View mTipsLayout;
+    private View mTipsCancel;
+
     private int mLastLongPressPos;
     private GestureDetector gestureDetector;
     private boolean isLoadingMore;
@@ -73,23 +80,41 @@ public class SelectDataActivity extends BaseWeiYinActivity {
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("加载中...");
 
+        mTipsLayout = findViewById(R.id.wy_select_data_tips_layout);
+        mTipsCancel = findViewById(R.id.wy_select_data_tips_cancel);
+
         mActionBarView = (ActionBarView) findViewById(R.id.wy_select_data_action_bar);
         mActionBarView.setLeftIconRes(R.mipmap.wy_actionbar_cancel);
-        mActionBarView.setTitle("选择数据");
+        mActionBarView.setTitle("选择照片");
 
         mRecyclerView = (RecyclerView) findViewById(R.id.wy_select_data_recycler_view);
         mRecyclerView.addItemDecoration(new SpaceItemDecoration());
         mLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            StatusBarUtil.setStatusBarColor(this, R.color.wy_bg_white);
+            StatusBarUtil.StatusBarLightMode(this);
+        }
+
+        if (SpUtils.getTipsFlag(mContext)) {
+            mTipsLayout.setVisibility(View.VISIBLE);
+            SpUtils.saveTipsFlag(mContext, false);
+        } else {
+            mTipsLayout.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void initData() {
         mAdapter = new SelectDataAdapter(this, getData());
 
+        mLoadMoreFootView = new LoadMoreFootView(this);
+        mAdapter.addFooterView(mLoadMoreFootView);
         if (WYSdk.getInstance().isLoadMore()) {
-            mLoadMoreFootView = new LoadMoreFootView(this);
-            mAdapter.addFooterView(mLoadMoreFootView);
+            mLoadMoreFootView.setTextViewVisible(View.VISIBLE);
+        } else {
+            mLoadMoreFootView.setTextViewVisible(View.INVISIBLE);
         }
 
         mRecyclerView.setAdapter(mAdapter);
@@ -97,17 +122,19 @@ public class SelectDataActivity extends BaseWeiYinActivity {
 
     @Override
     public void initListener() {
-        mLoadMoreFootView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (WYSdk.getInstance().getLoadMoreListener() != null) {
-                    WYSdk.getInstance().getLoadMoreListener().loadMore();
+        if (mLoadMoreFootView != null) {
+            mLoadMoreFootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (WYSdk.getInstance().getLoadMoreListener() != null) {
+                        WYSdk.getInstance().getLoadMoreListener().loadMore();
+                    }
+                    mProgressDialog.show();
+                    mLoadMoreFootView.loading();
+                    isLoadingMore = true;
                 }
-                mProgressDialog.show();
-                mLoadMoreFootView.loading();
-                isLoadingMore = true;
-            }
-        });
+            });
+        }
 
         gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             @Override
@@ -156,6 +183,14 @@ public class SelectDataActivity extends BaseWeiYinActivity {
             }
         });
 
+        mTipsCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTipsLayout.setVisibility(View.GONE);
+                SpUtils.saveTipsFlag(mContext, false);
+            }
+        });
+
         mActionBarView.setLeftIconClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,7 +198,7 @@ public class SelectDataActivity extends BaseWeiYinActivity {
             }
         });
 
-        mActionBarView.setRightIconClickListener(new View.OnClickListener() {
+        mActionBarView.setRightTextClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mProgressDialog.setMessage("正在生成画册...");

@@ -21,6 +21,10 @@ public class LoadMoreFootView extends LinearLayout {
         init();
     }
 
+    public void setTextViewVisible(int visible) {
+        mLoadMoreText.setVisibility(visible);
+    }
+
     private void init() {
         mLoadMoreText = (TextView) findViewById(R.id.load_more_text);
     }

@@ -5,6 +5,8 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,19 +22,19 @@ import java.util.ArrayList;
 
 public class FabActions {
 
-    Context context;
+    private Context context;
 
-    RelativeLayout frameLayout;
+    private RelativeLayout frameLayout;
 
-    ImageView mainImageButton;
+    private ImageView mainImageButton;
 
-    RotateAnimation rotateOpenAnimation;
+    private RotateAnimation rotateOpenAnimation;
 
-    RotateAnimation rotateCloseAnimation;
+    private RotateAnimation rotateCloseAnimation;
 
-    ArrayList<View> promotedActions;
+    private ArrayList<View> promotedActions;
 
-    ObjectAnimator objectAnimator[];
+    private ObjectAnimator objectAnimator[];
 
     private int px;
 
@@ -89,7 +91,7 @@ public class FabActions {
 
     public void addItem(int resId, String text, View.OnClickListener onClickListener) {
         View view = View.inflate(context, R.layout.fab_item, null);
-        setMargin(view, getScreenWidth(context) - dp2px(context, 120));
+        setMargin(view, getScreenWidth(context) - dp2px(context, 128));
 
         TextView textView = (TextView) view.findViewById(R.id.fab_item_text);
         ImageView imageView = (ImageView) view.findViewById(R.id.fab_item_icon);
@@ -124,7 +126,7 @@ public class FabActions {
         animation.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
-                mainImageButton.startAnimation(rotateCloseAnimation);
+                //mainImageButton.startAnimation(rotateCloseAnimation);
                 mainImageButton.setClickable(false);
             }
 
@@ -132,6 +134,8 @@ public class FabActions {
             public void onAnimationEnd(Animator animator) {
                 mainImageButton.setClickable(true);
                 hidePromotedActions();
+                frameLayout.setBackgroundDrawable(null);
+                mainImageButton.setImageResource(R.mipmap.icon_detail_printfing);
             }
 
             @Override
@@ -169,9 +173,11 @@ public class FabActions {
         animation.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
-                mainImageButton.startAnimation(rotateOpenAnimation);
+                frameLayout.setBackgroundDrawable(new ColorDrawable(Color.argb(128, 0, 0, 0)));
+                //mainImageButton.startAnimation(rotateOpenAnimation);
                 mainImageButton.setClickable(false);
                 showPromotedActions();
+                mainImageButton.setImageResource(R.mipmap.icon_printfing_book_cancel);
             }
 
             @Override

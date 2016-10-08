@@ -49,6 +49,8 @@ public class WYWebViewActivity extends BaseWeiYinActivity {
     public static final int REQUEST_CODE_PAYMENT = 10001;
 
     private WebView mWebView;
+    private View mCancelView;
+
     private boolean isLandscape;
     private String mUrl;
     private ProgressDialog mLoadingDialog;
@@ -61,21 +63,6 @@ public class WYWebViewActivity extends BaseWeiYinActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
         context.startActivity(intent);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //初始化传过来的intent
-        initIntentData();
-        //设置显示的内容
-        setContentView(getContentViewId());
-        //设置界面的
-        initUI();
-        //设置数据的
-        initData();
-        //设置监听的
-        initListener();
     }
 
     public void initIntentData() {
@@ -93,6 +80,7 @@ public class WYWebViewActivity extends BaseWeiYinActivity {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
 
+        mCancelView = findViewById(R.id.wy_public_web_cancel);
         mWebView = (WebView) findViewById(R.id.wy_public_web_view);
         mLoadingDialog = new ProgressDialog(this);
         mLoadingDialog.setCanceledOnTouchOutside(false);
@@ -140,7 +128,7 @@ public class WYWebViewActivity extends BaseWeiYinActivity {
                     mWebView.setVisibility(View.INVISIBLE);
                 }
 
-                if (url.contains("/book/") || url.contains("/photo/") || url.contains("/calendar/")||url.contains("/card/")) {
+                if (url.contains("/book/") || url.contains("/photo/") || url.contains("/calendar/") || url.contains("/card/")) {
                     orientation(0);
                 } else {
                     orientation(1);
@@ -148,6 +136,9 @@ public class WYWebViewActivity extends BaseWeiYinActivity {
             }
 
             public void onPageFinished(WebView view, String url) {
+
+                mCancelView.setVisibility(View.GONE);
+
                 if (!isFinishing()) {
                     closeDialog(mLoadingDialog);
                 }
@@ -192,6 +183,13 @@ public class WYWebViewActivity extends BaseWeiYinActivity {
             @Override
             public void payResult(String result) {
                 loadJSFunc("showPayResult", result);
+            }
+        });
+
+        mCancelView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }

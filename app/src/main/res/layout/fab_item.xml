@@ -7,10 +7,11 @@
 
     <TextView
         android:id="@+id/fab_item_text"
-        android:layout_width="56dp"
+        android:layout_width="64dp"
         android:layout_height="56dp"
-        android:gravity="center"
-        android:textColor="@color/wy_bg_selected_image_color" />
+        android:paddingRight="4dp"
+        android:gravity="center|right"
+        android:textColor="@color/wy_bg_white" />
 
     <ImageView
         android:id="@+id/fab_item_icon"

@@ -19,6 +19,7 @@ public class ActionBarView extends LinearLayout {
 
     private ImageView mLeftIcon;
     private View mRightIcon;
+    private View mRightText;
     private TextView mTitle;
 
     public ActionBarView(Context context, AttributeSet attrs) {
@@ -36,9 +37,10 @@ public class ActionBarView extends LinearLayout {
         mLeftIcon = (ImageView) findViewById(R.id.action_bar_back_icon);
         mRightIcon = findViewById(R.id.action_bar_right_icon);
         mTitle = (TextView) findViewById(R.id.action_bar_title);
+        mRightText = findViewById(R.id.action_bar_right_text);
     }
 
-    public void setLeftIconRes(int res){
+    public void setLeftIconRes(int res) {
         mLeftIcon.setImageResource(res);
     }
 
@@ -51,6 +53,14 @@ public class ActionBarView extends LinearLayout {
     }
 
     public void setRightIconClickListener(@NonNull OnClickListener listener) {
+        mRightText.setVisibility(View.GONE);
+        mRightIcon.setVisibility(View.VISIBLE);
         mRightIcon.setOnClickListener(listener);
+    }
+
+    public void setRightTextClickListener(@NonNull OnClickListener listener) {
+        mRightIcon.setVisibility(View.GONE);
+        mRightText.setVisibility(View.VISIBLE);
+        mRightText.setOnClickListener(listener);
     }
 }

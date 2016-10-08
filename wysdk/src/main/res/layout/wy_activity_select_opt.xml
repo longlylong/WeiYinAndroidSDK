@@ -8,59 +8,82 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        android:background="@color/wy_bg_white"
         android:orientation="vertical">
 
-
-        <TextView
-            android:id="@+id/select_opt_shop_cart"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:background="@drawable/wy_select_item_gray"
-            android:gravity="center"
-            android:text="购物车"
-            android:textColor="@color/wy_bg_black" />
+            android:layout_height="wrap_content"
+            android:background="@color/wy_bg_white"
+            android:orientation="vertical">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/wy_bg_selected_image_color" />
+            <TextView
+                android:id="@+id/select_opt_shop_cart"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/wy_selectable_item_background"
+                android:gravity="center"
+                android:text="购物车"
+                android:textColor="@color/wy_bg_black" />
 
-        <TextView
-            android:id="@+id/select_opt_my_order"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:background="@drawable/wy_select_item_gray"
-            android:gravity="center"
-            android:text="我的订单"
-            android:textColor="@color/wy_bg_black" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/wy_bg_opt_line" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/wy_bg_selected_image_color" />
+            <TextView
+                android:id="@+id/select_opt_my_order"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/wy_selectable_item_background"
+                android:gravity="center"
+                android:text="我的订单"
+                android:textColor="@color/wy_bg_black" />
 
-        <TextView
-            android:id="@+id/select_opt_about"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:background="@drawable/wy_select_item_gray"
-            android:gravity="center"
-            android:text="实物介绍"
-            android:textColor="@color/wy_bg_black" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/wy_bg_opt_line" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/wy_bg_selected_image_color" />
+            <TextView
+                android:id="@+id/select_opt_about"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/wy_selectable_item_background"
+                android:gravity="center"
+                android:text="实物介绍"
+                android:textColor="@color/wy_bg_black" />
 
-        <TextView
-            android:id="@+id/select_opt_exit"
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/wy_bg_opt_line" />
+
+            <TextView
+                android:id="@+id/select_opt_about_q"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/wy_selectable_item_background"
+                android:gravity="center"
+                android:text="常见问题"
+                android:textColor="@color/wy_bg_black" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:background="@drawable/wy_select_item_gray"
-            android:gravity="center"
-            android:text="退出制作"
-            android:textColor="@color/wy_bg_black" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@color/wy_bg_white"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/select_opt_exit"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+
+                android:background="@drawable/wy_selectable_item_background"
+                android:gravity="center"
+                android:text="退出制作"
+                android:textColor="@color/wy_bg_black" />
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

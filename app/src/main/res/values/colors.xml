@@ -6,4 +6,6 @@
 
     <color name="fab_sheet_color">#FFffff</color>
     <color name="fab_color">#f56971</color>
+    <color name="bg_gray">#cccccc</color>
+    <color name="bg_white">#ffffff</color>
 </resources>

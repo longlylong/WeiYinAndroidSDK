@@ -2,8 +2,10 @@ package com.example.king.weiyinsdk;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -16,10 +18,13 @@ import com.weiyin.wysdk.basesdk.interfaces.WYImageLoader;
 import com.weiyin.wysdk.basesdk.interfaces.WYLoadMoreListener;
 import com.weiyin.wysdk.basesdk.interfaces.WYPayOrderListener;
 import com.weiyin.wysdk.model.request.RequestStructDataBean;
+import com.weiyin.wysdk.util.SpUtils;
+import com.weiyin.wysdk.util.StatusBarUtil;
 import com.weiyin.wysdk.util.thread.MainThreadExecutor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,7 +39,12 @@ public class MainActivity extends AppCompatActivity {
         ImageLoaderWrapper.initDefault(this, ImageLoaderWrapper.getTmpDir(), false);
 
         //openid 每个合作方的每个用户唯一标识 建议写法 前缀+唯一标识 如 WY_xxxxxxx
-        WYSdk.getInstance().setSdk(this, "52HJR62BDS6SDD21", "VlYmY2ZjBmOWFmZTJlZTk3NzdhN2M0ODM0MjE3", "openid");
+        String openId = SpUtils.getUniqueId(this);
+        if (TextUtils.isEmpty(openId)) {
+            openId = "wy_sdk_demo_" + UUID.randomUUID().toString();
+            SpUtils.saveUniqueId(this, openId);
+        }
+        WYSdk.getInstance().setSdk(this, "52HJR62BDS6SDD21", "VlYmY2ZjBmOWFmZTJlZTk3NzdhN2M0ODM0MjE3", openId);
 
         //编辑面页设置
         edit();
@@ -66,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //上啦加载更多 默认关闭的
-        WYSdk.getInstance().openLoadMore(true);
+        //WYSdk.getInstance().openLoadMore(true);
         WYSdk.getInstance().setWyLoadMoreListener(new WYLoadMoreListener() {
             @Override
             public void loadMore() {
@@ -116,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         final FabActions fabLib = new FabActions();
 
         fabLib.setup(getApplicationContext(), frameLayout);
-        fabLib.addItem(R.mipmap.icon_detail_printfing, "照片书", new View.OnClickListener() {
+        fabLib.addItem(R.mipmap.icon_printf_book_big, "照片书", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //每次请求前都要添加好数据,请求成功或失败都会清除数据
@@ -127,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        fabLib.addItem(R.mipmap.icon_detail_printfing, "照片冲印", new View.OnClickListener() {
+        fabLib.addItem(R.mipmap.icon_printf_book_photo, "照片冲印", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addData();
@@ -136,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        fabLib.addItem(R.mipmap.icon_detail_printfing, "卡片", new View.OnClickListener() {
+        fabLib.addItem(R.mipmap.icon_printf_book_card, "卡片", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addData();
@@ -145,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        fabLib.addItem(R.mipmap.icon_detail_printfing, "台历", new View.OnClickListener() {
+        fabLib.addItem(R.mipmap.icon_printf_book_calendar, "台历", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addData();
@@ -159,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void addData() {
         //图片素材 必须是网络路径 宽高也是必要的
-        String frontCoverUrl = "http://image.weiyin.cc/719/185904/6B6D993C-40E0-4B0F-81FB-86444942C083@1o_800w";//1334 x 1334
+        String frontCoverUrl = "http://image.weiyin.cc/719/185904/6da25ae9-c89c-410a-a437-8924102d1da1@1o_800w";//1334 x 1334
         String flyleafHeadUrl = "http://image.weiyin.cc/719/185904/b6464d78-1ed9-4c4f-8fad-937a614d9893@1o_800w";//461 x 461
         String backCoverUrl = "http://image.weiyin.cc/719/185904/9B104E17-FEB1-40D5-8921-51B515CD0156@1o_800w";//1334 x 1334
 
@@ -212,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
         //拍摄时间,由于是网络图片就自定义了一个时间
         long originalTime = System.currentTimeMillis() / 1000;
 
-        WYSdk.getInstance().setFrontCover("了解微印", "", frontCoverUrl, frontCoverUrl, originalTime, 1334, 1334);
+        WYSdk.getInstance().setFrontCover("一本画册看懂微印品质", "", frontCoverUrl, frontCoverUrl, originalTime, 1334, 1334);
         WYSdk.getInstance().setFlyleaf("爱微印", flyleafHeadUrl, flyleafHeadUrl, originalTime, 461, 461);
         WYSdk.getInstance().setPreface("微印，国内领先的智能图文排版引擎提供商。\n" +
                 "微印画册APP，一键把手机照片做成书，可选丰富主题搭配，并提供纸质书生产、销售服务\n" +
@@ -235,45 +245,16 @@ public class MainActivity extends AppCompatActivity {
         WYSdk.getInstance().addPhotoBlock("", photoUrl11, photoUrl11, originalTime, 1289, 806);
 
         WYSdk.getInstance().addChapterBlock("画册简介", "");
-        WYSdk.getInstance().addTextBlock("排版样式\n" +
-                "画册有3种排版样式，分别是瀑布流排版、拼图排版和通栏排版\n" +
-                "瀑布流排版：按照片顺序铺陈排版，能完整显示全部照片\n" +
-                "拼图排版：根据照片比例匹配系统模板，自动拼图排版\n" +
-                "通栏排版：照片排版可以跨页显示");
         WYSdk.getInstance().addPhotoBlock("瀑布流排版", photoUrl12, photoUrl12, originalTime, 1289, 806);
         WYSdk.getInstance().addPhotoBlock("拼图排版", photoUrl13, photoUrl13, originalTime, 1289, 806);
         WYSdk.getInstance().addPhotoBlock("通栏排版", photoUrl14, photoUrl14, originalTime, 1289, 806);
-        WYSdk.getInstance().addTextBlock("纸张\n\n" +
-                "普通精装使用进口纸：美感极致\n" +
-                "纸色自然柔和\n" +
-                "独具专利的先进涂布工艺\n" +
-                "独特的表面质感\n" +
-                "层次感强\n" +
-                "是高档画册等高精印品的专业之选\n\n\n" +
-                "对裱精装使用双铜纸覆触感膜\n" +
-                "内页使用双铜纸对黏，中间夹0.3mmPVC\n" +
-                "过膜防水，永不变形");
         WYSdk.getInstance().addPhotoBlock("美感纸", photoUrl15, photoUrl15, originalTime, 1289, 806);
         WYSdk.getInstance().addPhotoBlock("美感纸", photoUrl16, photoUrl16, originalTime, 1289, 806);
         WYSdk.getInstance().addPhotoBlock("双铜对裱覆触感膜", photoUrl17, photoUrl17, originalTime, 1289, 806);
         WYSdk.getInstance().addPhotoBlock("双铜对裱覆触感膜", photoUrl18, photoUrl18, originalTime, 1289, 806);
-        WYSdk.getInstance().addTextBlock("印刷\n" +
-                "使用惠普indigo 10000高清顶级印刷\n" +
-                "惠普indigo10000是什么？\n" +
-                "它采用HP Indigo液体电子油墨技术和独特的数字胶印工艺，\n" +
-                "能印刷出清晰的线条、绚丽夺目的图像和插图\n" +
-                "印刷质量最高，堪比甚至超过胶印\n" +
-                "还原性强且画质细腻\n" +
-                "最主要\n" +
-                "全国20多台，我们有其中一台");
         WYSdk.getInstance().addPhotoBlock("", photoUrl19, photoUrl19, originalTime, 1289, 806);
         WYSdk.getInstance().addPhotoBlock("对裱装订方式：高档蝴蝶精装，无缝跨页，180度平铺，完美视觉效果", photoUrl20, photoUrl20, originalTime, 1289, 806);
         WYSdk.getInstance().addPhotoBlock("普通精装装订方式：简胶装", photoUrl21, photoUrl21, originalTime, 1289, 806);
-        WYSdk.getInstance().addTextBlock("书本尺寸\n\n" +
-                "纸质书尺寸为235*235mm\n" +
-                "市场上的书大小一般都是A5（21.5cm*14cm）\n" +
-                "对比尺寸增加25%  \n" +
-                "大尺寸，高颜值");
         WYSdk.getInstance().addPhotoBlock("", photoUrl22, photoUrl22, originalTime, 1289, 806);
         WYSdk.getInstance().addPhotoBlock("内配4个护角", photoUrl23, photoUrl23, originalTime, 1289, 806);
         WYSdk.getInstance().addPhotoBlock("内配4个护角", photoUrl24, photoUrl24, originalTime, 1289, 806);
@@ -281,13 +262,6 @@ public class MainActivity extends AppCompatActivity {
         WYSdk.getInstance().addPhotoBlock("外有飞机盒包装，防撞防摔，保护书本", photoUrl26, photoUrl26, originalTime, 1289, 806);
 
         WYSdk.getInstance().addChapterBlock("纸质书实物照", "");
-        WYSdk.getInstance().addTextBlock("对裱精装\n\n" +
-                "封面：高档硬壳封面  双铜纸覆触感膜\n\n" +
-                "内页：双铜纸过触感膜，中间夹0.3mmPVC\n\n" +
-                "对裱装订方式：高档蝴蝶精装，无缝跨页，180度平铺，完美视觉效果\n\n" +
-                "价格：48元起/10页内，100页加1页+2.5元\n\n" +
-                "尺寸：235mm*235mm\n\n" +
-                "印刷： 惠普indigo10000高清顶级印刷");
         WYSdk.getInstance().addPhotoBlock("", photoUrl27, photoUrl27, originalTime, 1289, 806);
         WYSdk.getInstance().addPhotoBlock("", photoUrl28, photoUrl28, originalTime, 1289, 806);
         WYSdk.getInstance().addPhotoBlock("", photoUrl29, photoUrl29, originalTime, 1289, 806);
@@ -295,13 +269,6 @@ public class MainActivity extends AppCompatActivity {
         WYSdk.getInstance().addPhotoBlock("", photoUrl31, photoUrl31, originalTime, 1289, 806);
         WYSdk.getInstance().addPhotoBlock("", photoUrl32, photoUrl32, originalTime, 1289, 806);
         WYSdk.getInstance().addPhotoBlock("", photoUrl33, photoUrl33, originalTime, 1289, 806);
-        WYSdk.getInstance().addTextBlock("普通精装\n\n" +
-                "封面：高档硬壳封面  240克美感纸覆哑膜\n\n" +
-                "内页：120克美感纸\n\n" +
-                "对裱装订方式：简易胶装\n\n" +
-                "价格：38元起/10页内，100页加1页+1.5元\n\n" +
-                "尺寸：235mm*235mm\n\n" +
-                "印刷： 惠普indigo10000高清顶级印刷");
         WYSdk.getInstance().addPhotoBlock("", photoUrl34, photoUrl34, originalTime, 1289, 806);
         WYSdk.getInstance().addPhotoBlock("", photoUrl35, photoUrl35, originalTime, 1289, 806);
         WYSdk.getInstance().addPhotoBlock("", photoUrl36, photoUrl36, originalTime, 1289, 806);
@@ -310,6 +277,14 @@ public class MainActivity extends AppCompatActivity {
         WYSdk.getInstance().addPhotoBlock("", photoUrl39, photoUrl39, originalTime, 1289, 806);
         WYSdk.getInstance().addPhotoBlock("", photoUrl40, photoUrl40, originalTime, 1289, 806);
 
+
+//        WYSdk.getInstance().addTextBlock("对裱精装\n\n" +
+//                "封面：高档硬壳封面  双铜纸覆触感膜\n\n" +
+//                "内页：双铜纸过触感膜，中间夹0.3mmPVC\n\n" +
+//                "对裱装订方式：高档蝴蝶精装，无缝跨页，180度平铺，完美视觉效果\n\n" +
+//                "价格：48元起/10页内，100页加1页+2.5元\n\n" +
+//                "尺寸：235mm*235mm\n\n" +
+//                "印刷： 惠普indigo10000高清顶级印刷");
     }
 
     private void postData(int bookType) {

@@ -9,6 +9,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <LinearLayout
+        android:id="@+id/wy_select_data_tips_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/wy_bg_gray"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="长按照片可以添加或修改文字" />
+
+        <ImageView
+            android:id="@+id/wy_select_data_tips_cancel"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginRight="16dp"
+            android:src="@mipmap/wy_actionbar_cancel" />
+    </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/wy_select_data_recycler_view"
         android:layout_width="match_parent"

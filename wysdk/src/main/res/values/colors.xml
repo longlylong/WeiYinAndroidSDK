@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="wy_bg_selected_image_color">#50000000</color>
+    <color name="wy_bg_opt_line">#50aaaaaa</color>
+    <color name="wy_bg_gray">#50aaaaaa</color>
     <color name="wy_bg_text_color">#10000000</color>
     <color name="wy_bg_text_white_color">#aaffffff</color>
     <color name="wy_bg_white">#ffffff</color>
+    <color name="wy_bg_theme">#f56971</color>
     <color name="wy_bg_black">#000000</color>
     <drawable name="wy_select_item_gray">#0E000000</drawable>
 </resources>

@@ -2,12 +2,14 @@ package com.weiyin.wysdk.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.view.View;
 import android.widget.EditText;
 
 import com.weiyin.wysdk.R;
 import com.weiyin.wysdk.activity.base.BaseWeiYinActivity;
 import com.weiyin.wysdk.util.ActionUtil;
+import com.weiyin.wysdk.util.StatusBarUtil;
 import com.weiyin.wysdk.view.ActionBarView;
 
 /**
@@ -46,6 +48,11 @@ public class EditTextActivity extends BaseWeiYinActivity {
 
         mEditText.setText(mText);
         mEditText.setSelection(mEditText.getText().length());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            StatusBarUtil.setStatusBarColor(this, R.color.wy_bg_white);
+            StatusBarUtil.StatusBarLightMode(this);
+        }
     }
 
     @Override

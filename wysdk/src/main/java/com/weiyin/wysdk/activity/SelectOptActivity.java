@@ -25,6 +25,7 @@ public class SelectOptActivity extends BaseDialogAnimActivity {
     private View mShopCart;
     private View mAbout;
     private View mExit;
+    private View mAboutQ;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,6 +40,7 @@ public class SelectOptActivity extends BaseDialogAnimActivity {
         mMyOrder = findViewById(R.id.select_opt_my_order);
         mShopCart = findViewById(R.id.select_opt_shop_cart);
         mAbout = findViewById(R.id.select_opt_about);
+        mAboutQ = findViewById(R.id.select_opt_about_q);
         mExit = findViewById(R.id.select_opt_exit);
     }
 
@@ -47,6 +49,7 @@ public class SelectOptActivity extends BaseDialogAnimActivity {
             @Override
             public void onClick(View v) {
                 WYSdk.getInstance().showOrderList(mContext);
+                setResult(RESULT_OK);
                 finish();
             }
         });
@@ -55,6 +58,7 @@ public class SelectOptActivity extends BaseDialogAnimActivity {
             @Override
             public void onClick(View v) {
                 WYSdk.getInstance().showShopCart(mContext);
+                setResult(RESULT_OK);
                 finish();
             }
         });
@@ -63,6 +67,16 @@ public class SelectOptActivity extends BaseDialogAnimActivity {
             @Override
             public void onClick(View v) {
                 WYSdk.getInstance().showPaper(mContext);
+                setResult(RESULT_OK);
+                finish();
+            }
+        });
+
+        mAboutQ.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WYSdk.getInstance().showQuestion(mContext);
+                setResult(RESULT_OK);
                 finish();
             }
         });

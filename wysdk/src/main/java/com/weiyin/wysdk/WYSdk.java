@@ -498,6 +498,13 @@ public class WYSdk extends BaseSdk {
     }
 
     /**
+     * 打开常见问题
+     */
+    public void showQuestion(Context context) {
+        WYWebViewActivity.launch(context, HttpConstant.getQuestionUrl(), false);
+    }
+
+    /**
      * 刷新支付结果,用来ui显示的 {@link WYSdk.PAY_SUCCESS,WYSdk.PAY_FAIL,WYSdk.PAY_CANCEL,WYSdk.PAY_INVALID}
      */
     public void refreshPayState(String result) {

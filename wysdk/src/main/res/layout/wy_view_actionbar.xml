@@ -15,12 +15,23 @@
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_weight="1"
-        android:gravity="center"
-        android:textColor="@color/wy_bg_black" />
+        android:gravity="center|left"
+        android:textColor="@color/wy_bg_black"
+        android:visibility="visible" />
 
     <ImageView
         android:id="@+id/action_bar_right_icon"
         android:layout_width="48dp"
         android:layout_height="wrap_content"
-        android:src="@mipmap/wy_actionbar_right_black" />
+        android:src="@mipmap/wy_actionbar_right_black"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/action_bar_right_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/wy_selectable_item_background"
+        android:padding="8dp"
+        android:text="预览排版"
+        android:textColor="@color/wy_bg_theme" />
 </LinearLayout>
