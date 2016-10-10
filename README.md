@@ -1,10 +1,10 @@
-Android SDK开发包 版本号 1.4.0 日期 20160920
+Android SDK开发包 版本号 1.4.4 日期 20160928
 
 安装
 
 当您下载了WeiYin Android SDK 的 zip 包后，进行以下步骤（对Android studio适用）:
 
-注意本SDK引用了 RETROFIT2.1.0如果遇到JAR冲突请自行去掉
+注意本SDK引用了 RETROFIT2.1.2如果遇到JAR冲突请自行去掉
 
 1.把wysdk放到工程根目录
 
