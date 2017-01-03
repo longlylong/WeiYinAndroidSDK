@@ -56,13 +56,10 @@ public class WYSdk extends BaseSdk {
     private boolean isLoadMore = false;
 
     private long lastLoginTime = 0;
-    private long lastHttpDNSTime = 0;
 
     private int channel;
     private String themeColor = "f56971";
     private String accessKey, accessSecret, openId, identity, thirdName, thirdHeadImg;
-
-    public String host, ip;
 
     private WYSdk() {
         mHttpStore = new HttpStore();
@@ -231,14 +228,6 @@ public class WYSdk extends BaseSdk {
         return channel;
     }
 
-    public String getHost() {
-        mHttpStore.getHttpDNSIp();
-        if (TextUtils.isEmpty(ip)) {
-            return host;
-        } else {
-            return "http://" + ip + "/";
-        }
-    }
 
     private String getOpenId() {
         return openId;
@@ -265,10 +254,7 @@ public class WYSdk extends BaseSdk {
                         lastLoginTime = System.currentTimeMillis();
                         identity = userInfo.identity;
                         channel = userInfo.client;
-                        host = userInfo.host;
                         callSuccess(controller, userInfo);
-
-                        mHttpStore.getHttpDNSIp();
                     }
 
                     @Override
@@ -455,10 +441,6 @@ public class WYSdk extends BaseSdk {
                     public void ok() {
                         //清空数据
                         initStructData();
-
-                        if (printBean.url.contains(host)) {
-                            printBean.url = getHost() + printBean.url.replace(host, "");
-                        }
 
                         WYWebViewActivity.launch(context, printBean.url, true);
                         callSuccess(controller, 1000);

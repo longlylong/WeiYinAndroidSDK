@@ -1,7 +1,5 @@
 package com.weiyin.wysdk.http;
 
-import com.weiyin.wysdk.WYSdk;
-
 /**
  * 服务器常量
  * Created by King on 2015/4/22 0022.
@@ -31,27 +29,27 @@ public class HttpConstant {
      * 购物车地址
      */
     public static String getShowCartUrl() {
-        return ONLINE_SERVER ? WYSdk.getInstance().getHost() + "/order/webviewcart" : "https://apptest.weiyin.cc/order/webviewcart";
+        return Root_Api_Url + "order/webviewcart";
     }
 
     /**
      * 订单地址
      */
     public static String getShowOrderUrl() {
-        return ONLINE_SERVER ? WYSdk.getInstance().getHost() + "/order/webvieworder" : "https://apptest.weiyin.cc/order/webvieworder";
+        return Root_Api_Url + "order/webvieworder";
     }
 
     /**
      * 纸质画册地址
      */
     public static String getPaperUrl() {
-        return ONLINE_SERVER ? WYSdk.getInstance().getHost() + "/home/bookshow" : "https://apptest.weiyin.cc/home/bookshow";
+        return Root_Api_Url + "home/bookshow";
     }
 
     /**
      * 纸质画册地址
      */
     public static String getQuestionUrl() {
-        return "http://app.weiyin.cc/home/linktowx";
+        return "https://app.weiyin.cc/home/linktowx";
     }
 }

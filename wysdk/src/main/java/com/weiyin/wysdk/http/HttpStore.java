@@ -44,38 +44,9 @@ import okhttp3.Response;
 public class HttpStore {
 
     private WYProtocol mWYProtocol;
-    private static long mLastHttpDnsRequestTime;
 
     public HttpStore() {
         mWYProtocol = HttpProtocolFactory.getProtocol(HttpConstant.Root_Api_Url, WYProtocol.class);
-    }
-
-    public void getHttpDNSIp() {
-        if (System.currentTimeMillis() - mLastHttpDnsRequestTime < 30 * 60 * 1000) {
-            return;
-        }
-
-        AsyncExecutor.getInstance().execute(new Runnable() {
-            @Override
-            public void run() {
-                String host = WYSdk.getInstance().host;
-                if (!TextUtils.isEmpty(host)) {
-                    host = host.replace("http://", "");
-                }
-                String body = getSyn("http://203.107.1.1/101681/d?host=" + host);
-                String ip = "";
-                try {
-                    HttpDNSBean dnsBean = GsonUtils.getInstance().parse(HttpDNSBean.class, body);
-                    if (dnsBean != null && !CollectionUtils.isEmpty(dnsBean.ips)) {
-                        mLastHttpDnsRequestTime = System.currentTimeMillis();
-                        ip = dnsBean.ips.get(0);
-                    }
-                } catch (ClientException ignored) {
-                }
-                WYSdk.getInstance().ip = ip;
-            }
-        });
-
     }
 
     public String getSyn(String url) {
