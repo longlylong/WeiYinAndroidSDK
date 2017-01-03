@@ -154,6 +154,9 @@ public class ImageLoaderWrapper {
         }
 
         if (!TextUtils.isEmpty(imageUri)) {
+            if (imageUri.contains("https:")) {
+                imageUri = imageUri.replace("https:", "http:");
+            }
             Uri uri = Uri.parse(imageUri);
             String scheme = uri.getScheme();
             config.supportDiskCache = "http".equals(scheme) || "https".equals(scheme);
