@@ -18,32 +18,36 @@ public class HttpConstant {
     private static final String Online_Api_Url = "https://openapi.weiyin.cc/";//接口
     private static final String Test_Api_Url = "https://apitest.weiyin.cc/";//接口
 
+    private static final String Online_Show_Url = "https://app.weiyin.cc/";//接口
+    private static final String Test_Show_Url = "https://apptest.weiyin.cc/";//接口
+
     /**
      * 线上服务器
      */
     private static boolean ONLINE_SERVER = true;
 
     public static String Root_Api_Url = ONLINE_SERVER ? Online_Api_Url : Test_Api_Url;
+    private static String Root_Show_Url = ONLINE_SERVER ? Online_Show_Url : Test_Show_Url;
 
     /**
      * 购物车地址
      */
     public static String getShowCartUrl() {
-        return Root_Api_Url + "order/webviewcart";
+        return Root_Show_Url + "order/webviewcart";
     }
 
     /**
      * 订单地址
      */
     public static String getShowOrderUrl() {
-        return Root_Api_Url + "order/webvieworder";
+        return Root_Show_Url + "order/webvieworder";
     }
 
     /**
      * 纸质画册地址
      */
     public static String getPaperUrl() {
-        return Root_Api_Url + "home/bookshow";
+        return Root_Show_Url + "home/bookshow";
     }
 
     /**
