@@ -17,6 +17,7 @@ import com.weiyin.wysdk.activity.adapter.SelectDataSection;
 import com.weiyin.wysdk.activity.adapter.SpaceItemDecoration;
 import com.weiyin.wysdk.activity.base.BaseWeiYinActivity;
 import com.weiyin.wysdk.baseadapter.BaseQuickAdapter;
+import com.weiyin.wysdk.basesdk.AlbumHelper;
 import com.weiyin.wysdk.basesdk.WYListener;
 import com.weiyin.wysdk.model.request.RequestStructDataBean;
 import com.weiyin.wysdk.util.SpUtils;
@@ -158,6 +159,7 @@ public class SelectDataActivity extends BaseWeiYinActivity {
             public void onItemClick(View view, int position) {
                 SelectDataSection section = mAdapter.getData().get(position);
                 section.block.isSelected = !section.block.isSelected;
+                setTitleCount();
                 mAdapter.notifyItemChanged(position);
             }
         });
@@ -215,11 +217,13 @@ public class SelectDataActivity extends BaseWeiYinActivity {
                                 selectCount++;
                             }
                         }
-                        if (selectCount == 0) {
+
+                        if (AlbumHelper.checkPhotoCount(selectCount, mBookType)) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    showToast("请选择数据");
+                                    int[] range = AlbumHelper.photoRange(mBookType);
+                                    showToast("照片范围不符合哦,需" + range[0] + "-" + range[1]);
                                     mProgressDialog.setMessage("加载中...");
                                     mProgressDialog.dismiss();
                                 }
@@ -260,6 +264,20 @@ public class SelectDataActivity extends BaseWeiYinActivity {
                 });
             }
         });
+    }
+
+    public void setTitleCount() {
+        int selectCount = 0;
+        for (SelectDataSection section : mAdapter.getData()) {
+            if (section.block != null && section.block.isSelected) {
+                selectCount++;
+            }
+        }
+        if (selectCount == 0) {
+            mActionBarView.setTitle("选择照片");
+        } else {
+            mActionBarView.setTitle("已选择" + selectCount + "张");
+        }
     }
 
     private List<SelectDataSection> getData() {

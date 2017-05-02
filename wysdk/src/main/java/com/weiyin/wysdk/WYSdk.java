@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import com.weiyin.wysdk.activity.SelectDataActivity;
 import com.weiyin.wysdk.activity.WYWebViewActivity;
+import com.weiyin.wysdk.basesdk.AlbumHelper;
 import com.weiyin.wysdk.basesdk.BaseSdk;
 import com.weiyin.wysdk.basesdk.Controller;
 import com.weiyin.wysdk.basesdk.WYListener;
@@ -36,10 +37,16 @@ public class WYSdk extends BaseSdk {
     public static final String PAY_INVALID = "invalid";// payment plugin not installed
 
     //成品类型
-    public static final int Print_Book = 0;// 成书
-    public static final int Print_Card = 1;// 成卡片
+    public static final int Print_Book = 0;// 大方书书
+    public static final int Print_Card = 1;// LOMO卡
     public static final int Print_Photo = 3;// 照片冲印
     public static final int Print_Calendar = 4;// 台历
+    public static final int Print_J_A5 = 5;// 轻杂志
+    public static final int Print_D_A5 = 6;// 对裱纪念册
+    public static final int Print_D_YL = 7;// 对裱影楼册
+    public static final int Print_D_YL_M = 8;// 迷你影楼册
+    public static final int Print_D_YL_B = 9;// 布纹影楼册
+    public static final int Print_D_YL_M_B = 10;// 迷你布纹册
 
     private HttpStore mHttpStore;
     private RequestStructDataBean structDataBean;
@@ -399,6 +406,12 @@ public class WYSdk extends BaseSdk {
                 || structDataBean.structData.copyright == null || structDataBean.structData.backCover == null) {
             throw new IllegalArgumentException("data not integrity!!");
         }
+
+        if (AlbumHelper.checkPhotoCount(structDataBean.structData.dataBlocks.size(), bookType)) {
+            int[] range = AlbumHelper.photoRange(bookType);
+            throw new IllegalArgumentException("photos count not match, the range is " + range[0] + "-" + range[1]);
+        }
+
         final Controller controller = new Controller(listener);
         callStart(controller);
 

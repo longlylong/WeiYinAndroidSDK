@@ -1,6 +1,5 @@
 package com.weiyin.wysdk.activity.adapter;
 
-import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +8,7 @@ import android.widget.TextView;
 
 import com.weiyin.wysdk.R;
 import com.weiyin.wysdk.WYSdk;
+import com.weiyin.wysdk.activity.SelectDataActivity;
 import com.weiyin.wysdk.baseadapter.BaseSectionQuickAdapter;
 import com.weiyin.wysdk.baseadapter.BaseViewHolder;
 import com.weiyin.wysdk.basesdk.interfaces.WYImageLoader;
@@ -24,10 +24,11 @@ import java.util.List;
 public class SelectDataAdapter extends BaseSectionQuickAdapter<SelectDataSection> {
 
     private int wh;
+    private SelectDataActivity context;
 
-    public SelectDataAdapter(Context context, List<SelectDataSection> data) {
+    public SelectDataAdapter(SelectDataActivity context, List<SelectDataSection> data) {
         super(R.layout.wy_item_select_data, R.layout.wy_item_select_data_head, data);
-
+        this.context = context;
         wh = ScreenUtil.getScreenWidth(context) / 3;
     }
 
@@ -54,6 +55,7 @@ public class SelectDataAdapter extends BaseSectionQuickAdapter<SelectDataSection
                         section.block.isSelected = item.isHeadSelectAll;
                     }
                 }
+                context.setTitleCount();
                 notifyDataSetChanged();
             }
         });
