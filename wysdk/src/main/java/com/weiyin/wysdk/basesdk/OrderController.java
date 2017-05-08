@@ -1,6 +1,5 @@
 package com.weiyin.wysdk.basesdk;
 
-import com.weiyin.wysdk.http.HttpStore;
 import com.weiyin.wysdk.model.BaseResultBean;
 import com.weiyin.wysdk.model.request.odrer.RequestActivateCouponBean;
 import com.weiyin.wysdk.model.request.odrer.RequestAddShopCartBean;
@@ -22,14 +21,13 @@ import com.weiyin.wysdk.model.result.ShopCartListBean;
  * Created by King on 2016/3/28 0028.
  */
 public class OrderController extends BaseSdk {
-    private HttpStore mHttpStore;
+
 
     private static class SingleHelper {
         public static OrderController instance = new OrderController();
     }
 
     private OrderController() {
-        mHttpStore = new HttpStore();
     }
 
     public static OrderController getInstance() {

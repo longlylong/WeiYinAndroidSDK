@@ -22,6 +22,7 @@ public class SelectOptActivity extends BaseDialogAnimActivity {
     }
 
     private View mMyOrder;
+    private View mProduct;
     private View mShopCart;
     private View mAbout;
     private View mExit;
@@ -38,6 +39,7 @@ public class SelectOptActivity extends BaseDialogAnimActivity {
 
     private void initView() {
         mMyOrder = findViewById(R.id.select_opt_my_order);
+        mProduct = findViewById(R.id.select_opt_product);
         mShopCart = findViewById(R.id.select_opt_shop_cart);
         mAbout = findViewById(R.id.select_opt_about);
         mAboutQ = findViewById(R.id.select_opt_about_q);
@@ -45,6 +47,15 @@ public class SelectOptActivity extends BaseDialogAnimActivity {
     }
 
     private void initListener() {
+        mProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WYSdk.getInstance().showProductList(mContext);
+                setResult(RESULT_OK);
+                finish();
+            }
+        });
+
         mMyOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

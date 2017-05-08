@@ -1,11 +1,10 @@
 package com.weiyin.wysdk.http;
 
 
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.weiyin.wysdk.WYSdk;
-import com.weiyin.wysdk.exception.ClientException;
+import com.weiyin.wysdk.model.BaseRequestBean;
 import com.weiyin.wysdk.model.BaseResultBean;
 import com.weiyin.wysdk.model.request.RequestStructDataBean;
 import com.weiyin.wysdk.model.request.RequestUserInfoBean;
@@ -19,19 +18,17 @@ import com.weiyin.wysdk.model.request.odrer.RequestOrderBean;
 import com.weiyin.wysdk.model.request.odrer.RequestOrderListBean;
 import com.weiyin.wysdk.model.request.odrer.RequestPayBean;
 import com.weiyin.wysdk.model.request.odrer.RequestShopCartListBean;
+import com.weiyin.wysdk.model.request.product.RequestDelProductBean;
 import com.weiyin.wysdk.model.result.CouponActivatedBean;
 import com.weiyin.wysdk.model.result.CouponBean;
-import com.weiyin.wysdk.model.result.HttpDNSBean;
 import com.weiyin.wysdk.model.result.OrderBean;
 import com.weiyin.wysdk.model.result.OrderListBean;
 import com.weiyin.wysdk.model.result.PayBean;
 import com.weiyin.wysdk.model.result.PrintBean;
+import com.weiyin.wysdk.model.result.ProductListBean;
 import com.weiyin.wysdk.model.result.ShopCartListBean;
 import com.weiyin.wysdk.model.result.UserInfoBean;
-import com.weiyin.wysdk.util.CollectionUtils;
-import com.weiyin.wysdk.util.GsonUtils;
 import com.weiyin.wysdk.util.HmacSHA1Signature;
-import com.weiyin.wysdk.util.thread.AsyncExecutor;
 
 import java.io.IOException;
 import java.util.Random;
@@ -81,6 +78,7 @@ public class HttpStore {
     private <T extends BaseResultBean> T getResult(retrofit2.Call<T> call) throws IOException {
         retrofit2.Response<T> response = call.execute();
         if (response.isSuccessful()) {
+            Log.d("112233", "Successful--" + call.request().url().toString());
             return response.body();
         } else {
             Log.d("112233", response.errorBody().string());
@@ -94,6 +92,36 @@ public class HttpStore {
             long time = getTimestamp();
             String authorization = getSignature(num, time, "Order/GetOrder");
             return getResult(mWYProtocol.getOrder(bean, num, time, authorization));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 删除作品
+     */
+    public BaseResultBean delProduct(RequestDelProductBean bean) {
+        try {
+            int num = getRandom();
+            long time = getTimestamp();
+            String authorization = getSignature(num, time, "Book/DeleteProduct");
+            return getResult(mWYProtocol.delProduct(bean, num, time, authorization));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 获取作品列表
+     */
+    public ProductListBean getProductList(BaseRequestBean bean) {
+        try {
+            int num = getRandom();
+            long time = getTimestamp();
+            String authorization = getSignature(num, time, "Book/GetProducts");
+            return getResult(mWYProtocol.getProductList(bean, num, time, authorization));
         } catch (IOException e) {
             e.printStackTrace();
         }

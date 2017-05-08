@@ -1,5 +1,6 @@
 package com.weiyin.wysdk.http;
 
+import com.weiyin.wysdk.model.BaseRequestBean;
 import com.weiyin.wysdk.model.BaseResultBean;
 import com.weiyin.wysdk.model.request.RequestStructDataBean;
 import com.weiyin.wysdk.model.request.RequestUserInfoBean;
@@ -13,12 +14,14 @@ import com.weiyin.wysdk.model.request.odrer.RequestOrderBean;
 import com.weiyin.wysdk.model.request.odrer.RequestOrderListBean;
 import com.weiyin.wysdk.model.request.odrer.RequestPayBean;
 import com.weiyin.wysdk.model.request.odrer.RequestShopCartListBean;
+import com.weiyin.wysdk.model.request.product.RequestDelProductBean;
 import com.weiyin.wysdk.model.result.CouponActivatedBean;
 import com.weiyin.wysdk.model.result.CouponBean;
 import com.weiyin.wysdk.model.result.OrderBean;
 import com.weiyin.wysdk.model.result.OrderListBean;
 import com.weiyin.wysdk.model.result.PayBean;
 import com.weiyin.wysdk.model.result.PrintBean;
+import com.weiyin.wysdk.model.result.ProductListBean;
 import com.weiyin.wysdk.model.result.ShopCartListBean;
 import com.weiyin.wysdk.model.result.UserInfoBean;
 
@@ -105,4 +108,16 @@ public interface WYProtocol {
                              @Header("Nonce") int nonce,
                              @Header("Timestamp ") long timestamp,
                              @Header("Authorization") String signature);
+
+    @POST("Book/GetProducts")
+    Call<ProductListBean> getProductList(@Body BaseRequestBean requestBean,
+                                         @Header("Nonce") int nonce,
+                                         @Header("Timestamp ") long timestamp,
+                                         @Header("Authorization") String signature);
+
+    @POST("Book/DeleteProduct")
+    Call<BaseResultBean> delProduct(@Body RequestDelProductBean requestBean,
+                                    @Header("Nonce") int nonce,
+                                    @Header("Timestamp ") long timestamp,
+                                    @Header("Authorization") String signature);
 }

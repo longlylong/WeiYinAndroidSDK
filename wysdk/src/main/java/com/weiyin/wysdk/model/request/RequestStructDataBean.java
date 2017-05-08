@@ -25,6 +25,8 @@ public class RequestStructDataBean {
     @Expose
     public int bookType;
 
+    @Expose
+    public int bookMakeType;
     /**
      * 第一次提交不用 分批以后第二次提交要传这个
      */

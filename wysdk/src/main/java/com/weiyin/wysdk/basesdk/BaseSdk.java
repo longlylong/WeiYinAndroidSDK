@@ -1,12 +1,19 @@
 package com.weiyin.wysdk.basesdk;
 
 
+import com.weiyin.wysdk.http.HttpStore;
 import com.weiyin.wysdk.model.BaseResultBean;
 import com.weiyin.wysdk.util.thread.AsyncExecutor;
 import com.weiyin.wysdk.util.thread.AsyncQueueExecutor;
 import com.weiyin.wysdk.util.thread.MainThreadExecutor;
 
 public class BaseSdk {
+
+    protected HttpStore mHttpStore;
+
+    protected BaseSdk() {
+        this.mHttpStore = new HttpStore();
+    }
 
     protected final void callStart(final Controller controller) {
         runOnMainThread(new Runnable() {

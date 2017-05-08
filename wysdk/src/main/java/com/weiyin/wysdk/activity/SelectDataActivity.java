@@ -49,7 +49,9 @@ public class SelectDataActivity extends BaseWeiYinActivity {
     private int mLastLongPressPos;
     private GestureDetector gestureDetector;
     private boolean isLoadingMore;
-    private int mBookType = WYSdk.Print_Book;
+
+    private int mBookType = WYSdk.BookType_Big;
+    private int mMakeType = WYSdk.MakeType_Simple;
 
     private LoadMoreFootView mLoadMoreFootView;
 
@@ -57,16 +59,19 @@ public class SelectDataActivity extends BaseWeiYinActivity {
     private static final int REQUEST_SELECT_OPT = 2222;
 
     private static final String BookType = "BookType";
+    private static final String MakeType = "MakeType";
 
-    public static void launch(Context context, int bookType) {
+    public static void launch(Context context, int bookType, int makeType) {
         Intent intent = getIntent(context, SelectDataActivity.class);
         intent.putExtra(BookType, bookType);
+        intent.putExtra(MakeType, makeType);
         context.startActivity(intent);
     }
 
     @Override
     public void initIntentData() {
-        mBookType = getIntent().getIntExtra(BookType, WYSdk.Print_Book);
+        mBookType = getIntent().getIntExtra(BookType, WYSdk.BookType_Big);
+        mMakeType = getIntent().getIntExtra(MakeType, WYSdk.MakeType_Simple);
     }
 
     @Override
@@ -218,11 +223,11 @@ public class SelectDataActivity extends BaseWeiYinActivity {
                             }
                         }
 
-                        if (AlbumHelper.checkPhotoCount(selectCount, mBookType)) {
+                        if (AlbumHelper.checkPhotoCount(selectCount, mBookType, mMakeType)) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    int[] range = AlbumHelper.photoRange(mBookType);
+                                    int[] range = AlbumHelper.photoRange(mBookType, mMakeType);
                                     showToast("照片范围不符合哦,需" + range[0] + "-" + range[1]);
                                     mProgressDialog.setMessage("加载中...");
                                     mProgressDialog.dismiss();
@@ -247,7 +252,7 @@ public class SelectDataActivity extends BaseWeiYinActivity {
 
                         }
                         structDataBean.structData.dataBlocks = selectedArr;
-                        WYSdk.getInstance().requestPrint(SelectDataActivity.this, mBookType, false, new WYListener<Object>() {
+                        WYSdk.getInstance().requestPrint(SelectDataActivity.this, mBookType, mMakeType, false, new WYListener<Object>() {
                             @Override
                             public void onFail(String msg) {
                                 mProgressDialog.dismiss();

@@ -14,7 +14,6 @@ import com.weiyin.wysdk.basesdk.interfaces.WYLoadMoreListener;
 import com.weiyin.wysdk.basesdk.interfaces.WYPayOrderListener;
 import com.weiyin.wysdk.basesdk.interfaces.WYWebViewListener;
 import com.weiyin.wysdk.http.HttpConstant;
-import com.weiyin.wysdk.http.HttpStore;
 import com.weiyin.wysdk.model.request.RequestStructDataBean;
 import com.weiyin.wysdk.model.request.RequestUserInfoBean;
 import com.weiyin.wysdk.model.result.PrintBean;
@@ -36,19 +35,26 @@ public class WYSdk extends BaseSdk {
     public static final String PAY_CANCEL = "cancel";// user canceld
     public static final String PAY_INVALID = "invalid";// payment plugin not installed
 
-    //成品类型
-    public static final int Print_Book = 0;// 大方书书
-    public static final int Print_Card = 1;// LOMO卡
-    public static final int Print_Photo = 3;// 照片冲印
-    public static final int Print_Calendar = 4;// 台历
-    public static final int Print_J_A5 = 5;// 轻杂志
-    public static final int Print_D_A5 = 6;// 对裱纪念册
-    public static final int Print_D_YL = 7;// 对裱影楼册
-    public static final int Print_D_YL_M = 8;// 迷你影楼册
-    public static final int Print_D_YL_B = 9;// 布纹影楼册
-    public static final int Print_D_YL_M_B = 10;// 迷你布纹册
+    public static final String SDK_VERSION = "1.6.0";//sdk版本
 
-    private HttpStore mHttpStore;
+    //成品类型需要组合
+    /**
+     * 大书 卡片 照片冲印 台历 A4书
+     */
+    public static final int BookType_Big = 0;
+    public static final int BookType_Card = 1;
+    public static final int BookType_Photo = 3;
+    public static final int BookType_Calendar = 4;
+    public static final int BookType_A4 = 5;
+
+    public static final int MakeType_Simple = 0;   //简胶
+    public static final int MakeType_A4_D = 1;     //A4对裱
+    public static final int MakeType_Jing = 2;     //精装
+    public static final int MakeType_28P = 4;      //28P对裱影楼册
+    public static final int MakeType_28P_B = 6;    //布纹
+    public static final int MakeType_28P_M = 5;    //迷你
+    public static final int MakeType_28P_M_B = 7;  //布纹迷你
+
     private RequestStructDataBean structDataBean;
 
     private WYImageLoader wyImageLoader;
@@ -67,9 +73,9 @@ public class WYSdk extends BaseSdk {
     private int channel;
     private String themeColor = "f56971";
     private String accessKey, accessSecret, openId, identity, thirdName, thirdHeadImg;
+    public String guid, token, timestamp;
 
     private WYSdk() {
-        mHttpStore = new HttpStore();
         initStructData();
     }
 
@@ -235,7 +241,6 @@ public class WYSdk extends BaseSdk {
         return channel;
     }
 
-
     private String getOpenId() {
         return openId;
     }
@@ -260,6 +265,9 @@ public class WYSdk extends BaseSdk {
 
                         lastLoginTime = System.currentTimeMillis();
                         identity = userInfo.identity;
+                        guid = userInfo.guid;
+                        token = userInfo.token;
+                        timestamp = userInfo.timestamp;
                         channel = userInfo.client;
                         callSuccess(controller, userInfo);
                     }
@@ -398,17 +406,28 @@ public class WYSdk extends BaseSdk {
     }
 
     /**
-     * 提交数据入口
-     * {@link WYSdk.Print_Book,WYSdk.Print_Card,WYSdk.Print_Photo,WYSdk.Print_Calendar}
+     * 提交数据入口 对照常量
+     * 类型bookType makeType
+     * {@link WYSdk.BookType_Big,WYSdk.MakeType_Simple,....}
+     * 简胶大方书 0 0
+     * 对裱影楼册 0 4
+     * 迷你影楼册 0 5
+     * 布纹影楼册 0 6
+     * 迷你布纹册 0 7
+     * 卡片 1 0
+     * 照片冲印 3 0
+     * 台历 4 0
+     * 轻杂志 5 0
+     * 对裱纪念册 5 1
      */
-    public void postPrintData(final Context context, final int bookType, final WYListener<Object> listener) {
+    public void postPrintData(final Context context, final int bookType, final int makeType, final WYListener<Object> listener) {
         if (structDataBean.structData.cover == null || structDataBean.structData.flyleaf == null || structDataBean.structData.preface == null
                 || structDataBean.structData.copyright == null || structDataBean.structData.backCover == null) {
             throw new IllegalArgumentException("data not integrity!!");
         }
 
-        if (AlbumHelper.checkPhotoCount(structDataBean.structData.dataBlocks.size(), bookType)) {
-            int[] range = AlbumHelper.photoRange(bookType);
+        if (AlbumHelper.checkPhotoCount(structDataBean.structData.dataBlocks.size(), bookType, makeType)) {
+            int[] range = AlbumHelper.photoRange(bookType, makeType);
             throw new IllegalArgumentException("photos count not match, the range is " + range[0] + "-" + range[1]);
         }
 
@@ -417,17 +436,17 @@ public class WYSdk extends BaseSdk {
 
         if (isLogin()) {
             if (isShowSelectDataPage) {
-                SelectDataActivity.launch(context, bookType);
+                SelectDataActivity.launch(context, bookType, makeType);
                 callSuccess(controller, -1);
             } else {
-                requestPrint(context, bookType, true, listener);
+                requestPrint(context, bookType, makeType, true, listener);
             }
 
         } else {
             final Controller c = new Controller(new WYListener<UserInfoBean>() {
                 @Override
                 public void onSuccess(UserInfoBean result) {
-                    postPrintData(context, bookType, listener);
+                    postPrintData(context, bookType, makeType, listener);
                 }
 
                 @Override
@@ -439,13 +458,14 @@ public class WYSdk extends BaseSdk {
         }
     }
 
-    public void requestPrint(final Context context, final int bookType, final boolean failedClear, WYListener<Object> listener) {
+    public void requestPrint(final Context context, final int bookType, final int makeType, final boolean failedClear, WYListener<Object> listener) {
         final Controller controller = new Controller(listener);
         runOnAsyncThread(new Runnable() {
             @Override
             public void run() {
                 structDataBean.identity = getIdentity();
                 structDataBean.bookType = bookType;
+                structDataBean.bookMakeType = makeType;
 
                 final PrintBean printBean = mHttpStore.postStructData(structDataBean);
 
@@ -455,7 +475,7 @@ public class WYSdk extends BaseSdk {
                         //清空数据
                         initStructData();
 
-                        WYWebViewActivity.launch(context, printBean.url, true);
+                        WYWebViewActivity.launch(context, printBean.url + "&" + HttpConstant.getToken(), true);
                         callSuccess(controller, 1000);
                     }
 
@@ -469,6 +489,13 @@ public class WYSdk extends BaseSdk {
                 });
             }
         });
+    }
+
+    /**
+     * 打开我的作品面页
+     */
+    public void showProductList(Context context) {
+        WYWebViewActivity.launch(context, HttpConstant.getShowProductListUrl(), false);
     }
 
     /**

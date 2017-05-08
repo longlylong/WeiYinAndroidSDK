@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
-import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.DownloadListener;
@@ -26,6 +25,7 @@ import com.weiyin.wysdk.R;
 import com.weiyin.wysdk.WYSdk;
 import com.weiyin.wysdk.activity.base.BaseWeiYinActivity;
 import com.weiyin.wysdk.basesdk.OrderController;
+import com.weiyin.wysdk.basesdk.ProductController;
 import com.weiyin.wysdk.basesdk.WYListener;
 import com.weiyin.wysdk.basesdk.interfaces.WYWebViewListener;
 import com.weiyin.wysdk.exception.ClientException;
@@ -35,6 +35,7 @@ import com.weiyin.wysdk.model.result.CouponActivatedBean;
 import com.weiyin.wysdk.model.result.CouponBean;
 import com.weiyin.wysdk.model.result.OrderListBean;
 import com.weiyin.wysdk.model.result.PayBean;
+import com.weiyin.wysdk.model.result.ProductListBean;
 import com.weiyin.wysdk.model.result.ShopCartListBean;
 import com.weiyin.wysdk.util.ActionUtil;
 import com.weiyin.wysdk.util.GsonUtils;
@@ -136,7 +137,13 @@ public class WYWebViewActivity extends BaseWeiYinActivity {
                     mWebView.setVisibility(View.INVISIBLE);
                 }
 
-                if (url.contains("/book/") || url.contains("/photo/") || url.contains("/calendar/") || url.contains("/card/")) {
+                if (url.contains("webviewproduct")) {
+                    orientation(1);
+                } else if (url.contains("/book/")
+                        || url.contains("/photo/")
+                        || url.contains("/calendar/")
+                        || url.contains("/card/")
+                        || url.contains("/a4/")) {
                     orientation(0);
                 } else {
                     orientation(1);
@@ -391,6 +398,49 @@ public class WYWebViewActivity extends BaseWeiYinActivity {
         }
 
         @JavascriptInterface
+        public void getProductList() {
+            ProductController.getInstance().getProductList(new WYListener<ProductListBean>() {
+                @Override
+                public void onSuccess(final ProductListBean result) {
+                    closeDialog(mLoadingDialog);
+                    try {
+                        String json = GsonUtils.getInstance().parse(result);
+                        loadJSFunc("showWebProductList", json);
+                    } catch (ClientException e) {
+                        showToast("开打购物车解析异常! ");
+                    }
+                }
+
+                @Override
+                public void onFail(String msg) {
+                    closeDialog(mLoadingDialog);
+                }
+            });
+        }
+
+        @JavascriptInterface
+        public void delProduct(String serial) {
+            ProductController.getInstance().delProduct(serial, new WYListener<BaseResultBean>() {
+                @Override
+                public void onStart() {
+                    mLoadingDialog.setMessage("删除作品中");
+                    mLoadingDialog.show();
+                }
+
+                @Override
+                public void onSuccess(final BaseResultBean result) {
+                    closeDialog(mLoadingDialog);
+                    loadJSFunc("delSuccess");
+                }
+
+                @Override
+                public void onFail(String msg) {
+                    closeDialog(mLoadingDialog);
+                }
+            });
+        }
+
+        @JavascriptInterface
         public void getCoupons() {
             OrderController.getInstance().getCoupon(new WYListener<CouponBean>() {
                 @Override
@@ -494,8 +544,8 @@ public class WYWebViewActivity extends BaseWeiYinActivity {
         }
 
         @JavascriptInterface
-        public void addShopCart2(int bookId, int count, int workmanship) {
-            OrderController.getInstance().addShopCart(bookId, count, workmanship, new WYListener<BaseResultBean>() {
+        public void addShopCart2(int bookId, int count, int makeType) {
+            OrderController.getInstance().addShopCart(bookId, count, makeType, new WYListener<BaseResultBean>() {
                 @Override
                 public void onStart() {
                     mLoadingDialog.setMessage("加入购物车中");

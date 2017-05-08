@@ -14,6 +14,15 @@ public class UserInfoBean extends BaseResultBean {
 
     @Expose
     public String host;
+    
+    @Expose
+    public String guid;
+
+    @Expose
+    public String token;
+
+    @Expose
+    public String timestamp;
 
     @Expose
     public int client;
